@@ -10,25 +10,20 @@ import {useTypedSelector} from "../hooks/useTypedSelector";
 import {useDispatch} from "react-redux";
 import {deleteComment, deleteReply, updateComment} from "../store/reducers/commentsActions";
 import NewReply from "./NewReply";
+import Modal from "./UI/Modal";
 
 
 const CommentsItem: FC<ICommentsItem> = (props: ICommentsItem) => {
 
     const currentUser: IUser = useTypedSelector(state => state.commentsReducer.currentUser)
 
-    const [isEditable, setEditable] = useState(false)
-    const [isReply, setReply] = useState(false)
-    const [isReplyToReply, setReplyToReply] = useState(false)
-    const [editableContent, setEditableContent] = useState('')
+    const [isEditable, setEditable] = useState<boolean>(false)
+    const [isReply, setReply] = useState<boolean>(false)
+    const [isReplyToReply, setReplyToReply] = useState<boolean>(false)
+    const [editableContent, setEditableContent] = useState<string>('')
+    const [isModal, setModal] = useState<boolean>(false)
 
     const dispatch = useDispatch()
-
-    const deleteCommentHandler = () => {
-        dispatch(deleteComment(props.id))
-    }
-    const deleteReplyHandler = (id:number) => {
-        dispatch(deleteReply(id))
-    }
 
     const toggleCommentReplyField = () => {
         setReply(!isReply)
@@ -76,6 +71,7 @@ const CommentsItem: FC<ICommentsItem> = (props: ICommentsItem) => {
 
     return (
         <>
+            {isModal ? <Modal setModal={setModal} commentId={props.id}/> : ''}
             <CardContainer>
                 <RateCounter commentId={props.id}>{props.score}</RateCounter>
                 <CommentInfo>
@@ -87,7 +83,7 @@ const CommentsItem: FC<ICommentsItem> = (props: ICommentsItem) => {
                         </UserInfo>
                         {props.user == currentUser ?
                             <Buttons>
-                                <Delete onClick={deleteCommentHandler}>Delete</Delete>
+                                <Delete onClick={() => setModal(true)}>Delete</Delete>
                                 {isEditableContent}
                             </Buttons>
                             :
@@ -101,7 +97,10 @@ const CommentsItem: FC<ICommentsItem> = (props: ICommentsItem) => {
                 <NewReply setReply={setReply} commentId={props.id} replyTo={props.user.username}/> : ''}
             {props.replies &&
                 props.replies.map(reply => (
+
                     <Wrapper key={Math.random()}>
+                        {isModal ? <Modal setModal={setModal} replyId={reply.id}/> : ''}
+
                         <ReplyContainer>
                             <RateCounter replyId={reply.id}>{reply.score}</RateCounter>
                             <CommentInfo>
@@ -114,7 +113,7 @@ const CommentsItem: FC<ICommentsItem> = (props: ICommentsItem) => {
                                     <Buttons>
                                         {reply.user.username == currentUser.username ?
                                             <Buttons>
-                                                <Delete onClick={() => deleteReplyHandler(reply.id)}>Delete</Delete>
+                                                <Delete onClick={() => setModal(true)}>Delete</Delete>
                                                 <Edit>Edit</Edit>
                                             </Buttons>
                                             :
@@ -186,7 +185,7 @@ const Delete = styled.div`
   border: none;
   cursor: pointer;
   background-color: transparent;
-  color: #ED6368;
+  color: var(--soft-red);
   font-weight: 700;
   transition: all ease 0.1s;
 
@@ -200,7 +199,7 @@ const Delete = styled.div`
   }
 
   :hover {
-    color: #ecb7b9;
+    color: var(--pale-red);
   }
 
   &:hover::before {

@@ -7,6 +7,7 @@ import {addComments, getCurrentUser, updateComment} from "../store/reducers/comm
 import data from "../data/data.json";
 import {ICommentsItem} from "../types/comments";
 import {useTypedSelector} from "../hooks/useTypedSelector";
+import Modal from "./UI/Modal";
 
 const Comments: FC = () => {
 
@@ -18,6 +19,7 @@ const Comments: FC = () => {
     return (
 
         <CommentsWrapper>
+
             <CommentsList/>
             <NewComment/>
         </CommentsWrapper>

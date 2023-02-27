@@ -273,7 +273,7 @@ const Reply = styled.button`
   }
 
   @media (max-width: 600px) {
-   
+
   }
 `
 

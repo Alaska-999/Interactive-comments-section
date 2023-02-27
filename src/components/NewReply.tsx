@@ -27,7 +27,7 @@ const NewReply: FC<NewReplyProps> = ({commentId, setReply, replyTo}) => {
             user: currentUser,
             replyingTo: replyTo
         }
-            dispatch(addNewReply(newReply, commentId!))
+        dispatch(addNewReply(newReply, commentId!))
         e.currentTarget.reset()
         setReply(false)
     }
@@ -66,6 +66,7 @@ const CommentInput = styled.input.attrs({as: 'textarea'})`
   min-height: 100px;
   white-space: pre-wrap;
   word-break: break-word;
+
   :focus {
     border: 1px solid var(--moderate-blue);
   }

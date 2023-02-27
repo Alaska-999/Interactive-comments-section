@@ -8,12 +8,16 @@ import {
     incrementRateReply
 } from "../../store/reducers/commentsActions";
 
-interface RateCounterProps extends PropsWithChildren {commentId?: number, replyId?: number}
+interface RateCounterProps extends PropsWithChildren {
+    commentId?: number,
+    replyId?: number
+}
 
-const RateCounter: React.FC<RateCounterProps> = ({children,
+const RateCounter: React.FC<RateCounterProps> = ({
+                                                     children,
                                                      commentId,
-                                                        replyId
-                                                     } ) => {
+                                                     replyId
+                                                 }) => {
     const dispatch = useDispatch()
     const rateIncrementHandler = () => {
         if (commentId) {
@@ -45,17 +49,18 @@ const Btn = styled.button`
   cursor: pointer;
   width: 100%;
   height: 100%;
-  background-color: transparent;  
+  background-color: transparent;
   color: var(--light-grayish-blue);
   font-size: 20px;
   transition: all ease 0.2s;
+
   :hover {
     color: var(--moderate-blue);
   }
 `
 
 const Rate = styled.div`
- margin: 5px 0;
+  margin: 5px 0;
   color: var(--moderate-blue);
   font-size: 18px;
   font-family: var(--family);
@@ -78,7 +83,7 @@ const RateCounterWrapper = styled.div`
     flex-direction: row;
     width: 130px;
     height: 40px;
-    
+
   }
 `
 

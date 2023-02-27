@@ -9,7 +9,7 @@ interface IModalProps {
     replyId?: number
 }
 
-const Modal: FC<IModalProps> = ({ setModal, commentId, replyId}) => {
+const Modal: FC<IModalProps> = ({setModal, commentId, replyId}) => {
 
     const dispatch = useDispatch()
 
@@ -25,18 +25,18 @@ const Modal: FC<IModalProps> = ({ setModal, commentId, replyId}) => {
     return (
         <Wrapper>
 
-                <Content>
-                    <Heading>Delete comment</Heading>
-                    <Text>
-                        Are you sure you want to delete this comment?
-                        This will remove the comment and can't be
-                        undone.
-                    </Text>
-                    <Buttons>
-                        <Cancel onClick={() => setModal(false)}>NO, CANCEL</Cancel>
-                        <Delete onClick={deleteCommentHandler}>YES, DELETE</Delete>
-                    </Buttons>
-                </Content>
+            <Content>
+                <Heading>Delete comment</Heading>
+                <Text>
+                    Are you sure you want to delete this comment?
+                    This will remove the comment and can't be
+                    undone.
+                </Text>
+                <Buttons>
+                    <Cancel onClick={() => setModal(false)}>NO, CANCEL</Cancel>
+                    <Delete onClick={deleteCommentHandler}>YES, DELETE</Delete>
+                </Buttons>
+            </Content>
 
         </Wrapper>
     );
@@ -64,7 +64,6 @@ const Content = styled.div`
   margin: 20px;
   padding: 24px;
   border-radius: 10px;
-  display: flex;
 `
 
 const Heading = styled.h2`

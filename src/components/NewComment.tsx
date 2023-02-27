@@ -39,9 +39,9 @@ const Form = styled.form`
   display: flex;
   width: 100%;
   @media (max-width: 600px) {
-flex-direction: column;
+    flex-direction: column;
   }
- 
+
 `
 const Div = styled.div`
   display: flex;
@@ -72,6 +72,7 @@ const CommentInput = styled.input.attrs({as: 'textarea'})`
   :focus {
     border: 1px solid var(--moderate-blue);
   }
+
   @media (max-width: 400px) {
     margin: 0 10px;
     width: 75%;

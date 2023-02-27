@@ -66,6 +66,9 @@ const CommentInput = styled.input.attrs({as: 'textarea'})`
   min-height: 100px;
   white-space: pre-wrap;
   word-break: break-word;
+  :focus {
+    border: 1px solid var(--moderate-blue);
+  }
 `
 const SendBtn = styled.button`
   background-color: var(--moderate-blue);

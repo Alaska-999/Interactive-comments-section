@@ -6,4 +6,11 @@ export const CardContainer = styled.div`
   padding: 24px;
   border-radius: 10px;
   display: flex;
+  @media (max-width: 600px) {
+    flex-direction: column-reverse;
+    align-items: center;
+    margin: 15px;
+    padding: 15px;
+  }
+  
 `

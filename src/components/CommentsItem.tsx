@@ -8,7 +8,7 @@ import {ICommentsItem, IUser} from "../types/comments";
 import {CardContainer} from "./UI/CardContainer";
 import {useTypedSelector} from "../hooks/useTypedSelector";
 import {useDispatch} from "react-redux";
-import {deleteComment, deleteReply, updateComment} from "../store/reducers/commentsActions";
+import {updateComment} from "../store/reducers/commentsActions";
 import NewReply from "./NewReply";
 import Modal from "./UI/Modal";
 
@@ -127,7 +127,8 @@ const CommentsItem: FC<ICommentsItem> = (props: ICommentsItem) => {
                         {isReplyToReply
                             ?
                             currentUser.username !== reply.user.username ?
-                                <NewReply setReply={setReplyToReply} commentId={props.id} replyTo={reply.user.username}/>
+                                <NewReply setReply={setReplyToReply} commentId={props.id}
+                                          replyTo={reply.user.username}/>
                                 : ''
                             : ''}
                     </Wrapper>
@@ -145,6 +146,10 @@ const Wrapper = styled.div`
 const CommentInfo = styled.div`
   margin-left: 15px;
   width: 100%;
+  @media (max-width: 600px) {
+    margin-left: 0;
+    margin-bottom: 15px;
+  }
 `
 
 const Line = styled.div`
@@ -153,12 +158,16 @@ const Line = styled.div`
   align-items: center;
   margin-bottom: 15px;
   width: 100%;
+
 `
 
 const UserInfo = styled.div`
   display: flex;
   align-items: center;
   font-size: var(--fz);
+  @media (max-width: 400px) {
+    flex-direction: column;
+  }
 `
 
 const UserAvatar = styled.img`
@@ -179,6 +188,7 @@ const PostDate = styled.div`
 `
 const Buttons = styled.div`
   display: flex;
+
 `
 
 const Delete = styled.div`
@@ -261,6 +271,10 @@ const Reply = styled.button`
   &:hover::before {
     filter: brightness(220%);
   }
+
+  @media (max-width: 600px) {
+   
+  }
 `
 
 const CommentText = styled.div`
@@ -276,6 +290,12 @@ const ReplyContainer = styled.div`
   padding: 20px;
   border-radius: var(--radii);
   display: flex;
+  @media (max-width: 600px) {
+    flex-direction: column-reverse;
+    align-items: center;
+    margin: 15px;
+    padding: 15px;
+  }
 `
 const ReplyTo = styled.span`
   color: var(--moderate-blue);

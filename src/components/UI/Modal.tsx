@@ -1,6 +1,5 @@
 import React, {FC} from 'react';
 import styled from "styled-components";
-import {CardContainer} from "./CardContainer";
 import {deleteComment, deleteReply} from "../../store/reducers/commentsActions";
 import {useDispatch} from "react-redux";
 
@@ -25,7 +24,7 @@ const Modal: FC<IModalProps> = ({ setModal, commentId, replyId}) => {
 
     return (
         <Wrapper>
-            <CardContainer>
+
                 <Content>
                     <Heading>Delete comment</Heading>
                     <Text>
@@ -38,7 +37,7 @@ const Modal: FC<IModalProps> = ({ setModal, commentId, replyId}) => {
                         <Delete onClick={deleteCommentHandler}>YES, DELETE</Delete>
                     </Buttons>
                 </Content>
-            </CardContainer>
+
         </Wrapper>
     );
 };
@@ -61,6 +60,11 @@ const Content = styled.div`
   display: flex;
   flex-direction: column;
   color: var(--blue-dark);
+  background-color: var(--white);
+  margin: 20px;
+  padding: 24px;
+  border-radius: 10px;
+  display: flex;
 `
 
 const Heading = styled.h2`

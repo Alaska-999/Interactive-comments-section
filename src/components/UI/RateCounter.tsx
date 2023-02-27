@@ -60,6 +60,9 @@ const Rate = styled.div`
   font-size: 18px;
   font-family: var(--family);
   font-weight: 500;
+  @media (max-width: 600px) {
+    margin: 6px auto;
+  }
 
 `
 const RateCounterWrapper = styled.div`
@@ -71,7 +74,12 @@ const RateCounterWrapper = styled.div`
   display: flex;
   flex-direction: column;
   border-radius: 7px;
-
+  @media (max-width: 600px) {
+    flex-direction: row;
+    width: 130px;
+    height: 40px;
+    
+  }
 `
 
 export default RateCounter;

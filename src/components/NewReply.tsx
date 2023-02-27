@@ -5,6 +5,7 @@ import {useTypedSelector} from "../hooks/useTypedSelector";
 import styled from "styled-components";
 import {useDispatch} from "react-redux";
 import {addNewReply} from "../store/reducers/commentsActions";
+import FormInput from "./UI/FormInput";
 
 interface NewReplyProps {
     commentId?: number,
@@ -19,7 +20,7 @@ const NewReply: FC<NewReplyProps> = ({commentId, setReply, replyTo}) => {
 
 
     const sendReplyHandler = (e: FormEvent<HTMLFormElement>) => {
-        if((e.currentTarget.elements[0] as HTMLInputElement).value != '') {
+        if ((e.currentTarget.elements[0] as HTMLInputElement).value != '') {
             e.preventDefault()
             const newReply = {
                 content: (e.currentTarget.elements[0] as HTMLInputElement).value,
@@ -40,9 +41,7 @@ const NewReply: FC<NewReplyProps> = ({commentId, setReply, replyTo}) => {
     return (
         <CardContainer>
             <Form onSubmit={sendReplyHandler}>
-                <UserAvatar imageUrl={currentUser.image.png}/>
-                <CommentInput name='reply' placeholder='Add a reply...'/>
-                <SendBtn type='submit'>Reply</SendBtn>
+                <FormInput imageUrl={currentUser.image.png} buttonName={'reply'}/>
             </Form>
         </CardContainer>
     );
@@ -51,45 +50,9 @@ const NewReply: FC<NewReplyProps> = ({commentId, setReply, replyTo}) => {
 const Form = styled.form`
   display: flex;
   width: 100%;
-`
-
-const UserAvatar = styled.div<{ imageUrl?: string }>`
-  width: 35px;
-  height: 35px;
-  border-radius: 100%;
-  background-color: blue;
-  background-image: url(${props => props.imageUrl});
-  background-size: cover;
-`
-
-const CommentInput = styled.input.attrs({as: 'textarea'})`
-  margin: 0 20px;
-  padding: 5px 10px;
-  width: 79%;
-  border: 1px solid var(--light-gray);
-  border-radius: var(--radii);
-  min-height: 100px;
-  white-space: pre-wrap;
-  word-break: break-word;
-
-  :focus {
-    border: 1px solid var(--moderate-blue);
+  @media (max-width: 600px) {
+    flex-direction: column;
   }
 `
-const SendBtn = styled.button`
-  background-color: var(--moderate-blue);
-  padding: 10px 25px;
-  border: none;
-  outline: none;
-  border-radius: var(--radii);
-  text-transform: uppercase;
-  color: var(--white);
-  max-height: 40px;
-  cursor: pointer;
-  transition: all ease 0.1s;
 
-  :hover {
-    background-color: var(--light-grayish-blue);
-  }
-`
 export default NewReply;

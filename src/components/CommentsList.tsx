@@ -6,7 +6,6 @@ import {ICommentsItem} from "../types/comments";
 const CommentsList: FC = () => {
 
     const commentsList: ICommentsItem[] = useTypedSelector(state => state.commentsReducer.comments)
-
     return (
         <div>
             {

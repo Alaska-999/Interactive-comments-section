@@ -3,8 +3,10 @@ import styled from "styled-components";
 import CommentsList from "./CommentsList";
 import NewComment from "./NewComment";
 import {useDispatch} from "react-redux";
-import {addComments, getCurrentUser} from "../store/reducers/commentsActions";
+import {addComments, getCurrentUser, updateComment} from "../store/reducers/commentsActions";
 import data from "../data/data.json";
+import {ICommentsItem} from "../types/comments";
+import {useTypedSelector} from "../hooks/useTypedSelector";
 
 const Comments: FC = () => {
 

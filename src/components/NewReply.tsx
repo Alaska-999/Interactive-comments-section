@@ -1,33 +1,43 @@
 import React, {FC, FormEvent} from 'react';
 import {CardContainer} from "./UI/CardContainer";
-import styled from "styled-components";
 import {IUser} from "../types/comments";
 import {useTypedSelector} from "../hooks/useTypedSelector";
+import styled from "styled-components";
 import {useDispatch} from "react-redux";
-import {addNewComment} from "../store/reducers/commentsActions";
+import {addNewReply} from "../store/reducers/commentsActions";
 
-const NewComment: FC = () => {
+interface NewReplyProps {
+    commentId?: number,
+    replyId?: number
+    setReply: (value: boolean) => void;
+    replyTo: string
+}
 
+const NewReply: FC<NewReplyProps> = ({commentId, setReply, replyTo}) => {
     const currentUser: IUser = useTypedSelector(state => state.commentsReducer.currentUser)
     const dispatch = useDispatch()
-    const sendPostHandler = (e: FormEvent<HTMLFormElement>) => {
+
+
+    const sendReplyHandler = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault()
-        const newComment = {
+        const newReply = {
             content: (e.currentTarget.elements[0] as HTMLInputElement).value,
             createdAt: 'date',
             id: Math.random(),
-            user: currentUser
+            user: currentUser,
+            replyingTo: replyTo
         }
-        dispatch(addNewComment(newComment))
+            dispatch(addNewReply(newReply, commentId!))
         e.currentTarget.reset()
+        setReply(false)
     }
 
     return (
         <CardContainer>
-            <Form onSubmit={sendPostHandler}>
+            <Form onSubmit={sendReplyHandler}>
                 <UserAvatar imageUrl={currentUser.image.png}/>
-                <CommentInput name='comment' placeholder='Add a comment...'/>
-                <SendBtn type='submit'>Send</SendBtn>
+                <CommentInput name='reply' placeholder='Add a reply...'/>
+                <SendBtn type='submit'>Reply</SendBtn>
             </Form>
         </CardContainer>
     );
@@ -73,5 +83,4 @@ const SendBtn = styled.button`
     background-color: var(--light-grayish-blue);
   }
 `
-
-export default NewComment;
+export default NewReply;

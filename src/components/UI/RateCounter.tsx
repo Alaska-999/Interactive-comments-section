@@ -1,17 +1,41 @@
 import React, {PropsWithChildren} from 'react';
 import styled from "styled-components";
+import {useDispatch} from "react-redux";
+import {
+    decrementRate,
+    decrementRateReply,
+    incrementRate,
+    incrementRateReply
+} from "../../store/reducers/commentsActions";
 
+interface RateCounterProps extends PropsWithChildren {commentId?: number, replyId?: number}
 
-interface RateCounterProps extends PropsWithChildren {
+const RateCounter: React.FC<RateCounterProps> = ({children,
+                                                     commentId,
+                                                        replyId
+                                                     } ) => {
+    const dispatch = useDispatch()
+    const rateIncrementHandler = () => {
+        if (commentId) {
+            dispatch(incrementRate(commentId))
+        } else if (replyId) {
+            dispatch(incrementRateReply(replyId))
+        }
 
-}
+    }
+    const rateDecrementHandler = () => {
+        if (commentId) {
+            dispatch(decrementRate(commentId))
+        } else if (replyId) {
+            dispatch(decrementRateReply(replyId))
+        }
+    }
 
-const RateCounter: React.FC<RateCounterProps> = ({children}) => {
     return (
         <RateCounterWrapper>
-            <Btn>+</Btn>
+            <Btn onClick={rateIncrementHandler}>+</Btn>
             <Rate>{children}</Rate>
-            <Btn>−</Btn>
+            <Btn onClick={rateDecrementHandler}>−</Btn>
         </RateCounterWrapper>
     );
 };

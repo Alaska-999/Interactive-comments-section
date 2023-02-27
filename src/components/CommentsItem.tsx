@@ -1,75 +1,148 @@
-import React, {FC} from 'react';
+import React, {FC, useEffect, useMemo, useState} from 'react';
 import styled from "styled-components";
 import RateCounter from "./UI/RateCounter";
-import replySvg from '../images/icon-reply.svg'
-import deleteSvg from '../images/icon-delete.svg'
-import editSvg from '../images/icon-edit.svg'
+import replySvg from '/images/icon-reply.svg'
+import deleteSvg from '/images/icon-delete.svg'
+import editSvg from '/images/icon-edit.svg'
 import {ICommentsItem, IUser} from "../types/comments";
 import {CardContainer} from "./UI/CardContainer";
 import {useTypedSelector} from "../hooks/useTypedSelector";
 import {useDispatch} from "react-redux";
-import {deleteComment} from "../store/reducers/commentsActions";
+import {deleteComment, deleteReply, updateComment} from "../store/reducers/commentsActions";
+import NewReply from "./NewReply";
 
 
 const CommentsItem: FC<ICommentsItem> = (props: ICommentsItem) => {
 
     const currentUser: IUser = useTypedSelector(state => state.commentsReducer.currentUser)
 
+    const [isEditable, setEditable] = useState(false)
+    const [isReply, setReply] = useState(false)
+    const [isReplyToReply, setReplyToReply] = useState(false)
+    const [editableContent, setEditableContent] = useState('')
+
     const dispatch = useDispatch()
+
     const deleteCommentHandler = () => {
-        dispatch(deleteComment(props.content))
+        dispatch(deleteComment(props.id))
+    }
+    const deleteReplyHandler = (id:number) => {
+        dispatch(deleteReply(id))
     }
 
+    const toggleCommentReplyField = () => {
+        setReply(!isReply)
+    }
+
+    const toggleCommentReplyToReplyField = () => {
+        setReplyToReply(!isReplyToReply)
+    }
+
+    const updateCommentHandler = () => {
+        dispatch(updateComment(props.id, editableContent))
+        setEditable(false)
+    }
+
+    const onEditClick = () => {
+        setEditable(true)
+    }
+
+    const isEditableContent = useMemo(() => {
+        return isEditable ?
+            <Edit onClick={updateCommentHandler}>Save</Edit>
+            :
+            <Edit onClick={onEditClick}>Edit</Edit>
+            ;
+    }, [isEditable, editableContent])
+
+
+    const content = useMemo(() => {
+        if (isEditable) {
+            return <input value={editableContent}
+                          onChange={(e) => {
+                              setEditableContent(e.target.value)
+                          }}/>
+        } else {
+            return <CommentText>{props.content}</CommentText>
+        }
+    }, [isEditable, props.content, editableContent])
+
+
+    useEffect(() => {
+        if (isEditable) {
+            setEditableContent(props.content)
+        }
+    }, [isEditable])
+
     return (
-        <Wrapper>
+        <>
             <CardContainer>
-                <RateCounter>{props.score}</RateCounter>
+                <RateCounter commentId={props.id}>{props.score}</RateCounter>
                 <CommentInfo>
                     <Line>
                         <UserInfo>
-                            <UserAvatar imageUrl={props.user.image.png}/>
+                            <UserAvatar src={props.user.image.png}/>
                             <UserName>{props.user.username}</UserName>
                             <PostDate>{props.createdAt}</PostDate>
                         </UserInfo>
                         {props.user == currentUser ?
                             <Buttons>
                                 <Delete onClick={deleteCommentHandler}>Delete</Delete>
-                                <Edit>Edit</Edit>
+                                {isEditableContent}
                             </Buttons>
-
                             :
-                            <Reply>Reply</Reply>
+                            <Reply onClick={toggleCommentReplyField}>Reply</Reply>
                         }
                     </Line>
-                    <CommentText>{props.content}</CommentText>
+                    {content}
                 </CommentInfo>
             </CardContainer>
+            {isReply && currentUser.username !== props.user.username ?
+                <NewReply setReply={setReply} commentId={props.id} replyTo={props.user.username}/> : ''}
             {props.replies &&
                 props.replies.map(reply => (
-                    <ReplyContainer key={Math.random()}>
-                        <RateCounter>{reply.score}</RateCounter>
-                        <CommentInfo>
-                            <Line>
-                                <UserInfo>
-                                    <UserAvatar/>
-                                    <UserName>{reply.user.username}</UserName>
-                                    <PostDate>{reply.createdAt}</PostDate>
-                                </UserInfo>
-                                <Reply>Reply</Reply>
-                            </Line>
-                            <CommentText><ReplyTo>@{reply.replyingTo} </ReplyTo>{reply.content}</CommentText>
-                        </CommentInfo>
-                    </ReplyContainer>
+                    <Wrapper key={Math.random()}>
+                        <ReplyContainer>
+                            <RateCounter replyId={reply.id}>{reply.score}</RateCounter>
+                            <CommentInfo>
+                                <Line>
+                                    <UserInfo>
+                                        <UserAvatar src={reply.user.image.png}/>
+                                        <UserName>{reply.user.username}</UserName>
+                                        <PostDate>{reply.createdAt}</PostDate>
+                                    </UserInfo>
+                                    <Buttons>
+                                        {reply.user.username == currentUser.username ?
+                                            <Buttons>
+                                                <Delete onClick={() => deleteReplyHandler(reply.id)}>Delete</Delete>
+                                                <Edit>Edit</Edit>
+                                            </Buttons>
+                                            :
+                                            <Reply onClick={toggleCommentReplyToReplyField}>Reply</Reply>}
+                                    </Buttons>
+
+                                </Line>
+                                <CommentText><ReplyTo>@{reply.replyingTo} </ReplyTo>{reply.content}</CommentText>
+                            </CommentInfo>
+                        </ReplyContainer>
+                        {isReplyToReply
+                            ?
+                            currentUser.username !== reply.user.username ?
+                                <NewReply setReply={setReplyToReply} commentId={props.id} replyTo={reply.user.username}/>
+                                : ''
+                            : ''}
+                    </Wrapper>
                 ))
 
             }
-        </Wrapper>
+        </>
     );
 };
 
-const Wrapper = styled.div`
-`
 
+const Wrapper = styled.div`
+
+`
 const CommentInfo = styled.div`
   margin-left: 15px;
   width: 100%;
@@ -89,12 +162,10 @@ const UserInfo = styled.div`
   font-size: var(--fz);
 `
 
-const UserAvatar = styled.div<{ imageUrl?: string }>`
+const UserAvatar = styled.img`
   width: 35px;
   height: 35px;
   border-radius: 100%;
-  background-color: blue;
-  background-image: url(${props => props.imageUrl});
   background-size: cover;
 `
 
@@ -206,15 +277,6 @@ const ReplyContainer = styled.div`
   padding: 20px;
   border-radius: var(--radii);
   display: flex;
-
-  //&::before {
-  //  content: '';
-  //  width: 2px;
-  //  height: 100%;
-  //  min-height: 200px;
-  //  background-color: red;
-  //}
-
 `
 const ReplyTo = styled.span`
   color: var(--moderate-blue);

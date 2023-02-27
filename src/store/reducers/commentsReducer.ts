@@ -1,8 +1,12 @@
-import {ADD_COMMENTS, ADD_NEW_COMMENT, DELETE_COMMENT, GET_CURRENT_USER} from "./commentsActions";
 import {
-    CommentsActionTypes,
-    CommentsState,
-} from "../../types/comments";
+    ADD_COMMENTS,
+    ADD_NEW_COMMENT, ADD_NEW_REPLY, DECREMENT_COUNTER, DECREMENT_COUNTER_REPLY,
+    DELETE_COMMENT, DELETE_REPLY,
+    GET_CURRENT_USER, INCREMENT_COUNTER, INCREMENT_COUNTER_REPLY,
+    UPDATE_COMMENT
+} from "./commentsActions";
+import {CommentsActionTypes, CommentsState, IUser,} from "../../types/comments";
+
 
 const initialState: CommentsState = {
     comments: [],
@@ -12,7 +16,8 @@ const initialState: CommentsState = {
             webp: ''
         },
         username: ''
-    }
+    },
+    editingComment: null
 }
 
 export const commentsReducer = (state = initialState, action: CommentsActionTypes) => {
@@ -36,11 +41,121 @@ export const commentsReducer = (state = initialState, action: CommentsActionType
                 ]
             }
         }
+
+        case ADD_NEW_REPLY: {
+            const updatedComments = state.comments.map((comment) => {
+                if (comment.id === action.payload.id) {
+                    return {
+                        ...comment,
+                        replies: [
+                            ...(comment.replies || []),
+                            {
+                                id: action.payload.reply.id,
+                                content: action.payload.reply.content,
+                                createdAt: action.payload.reply.createdAt,
+                                replyingTo: action.payload.reply.replyingTo,
+                                score: 0,
+                                user: action.payload.reply.user,
+                                replies: []
+                            },
+                        ],
+                    };
+                } else {
+                    return comment;
+                }
+            });
+
+            return {
+                ...state,
+                comments: updatedComments,
+            };
+        }
+
         case DELETE_COMMENT: {
             return {
                 ...state, comments:
-                    state.comments.filter((comment) => comment.content !== action.payload)
-                }
+                    state.comments.filter((comment) => comment.id !== action.payload)
+            }
+        }
+        case DELETE_REPLY: {
+            return {
+                ...state, comments:
+                    state.comments.map(comment => {
+                            if (comment.replies) {
+                                return {
+                                    ...comment, replies: comment.replies.filter(reply => reply.id !== action.payload)
+                                }
+                            }
+                            return comment
+                        }
+                    )
+            }
+        }
+
+        case UPDATE_COMMENT: {
+            return {
+                ...state, comments:
+                    state.comments.map(comment => comment.id === action.payload.id ?
+                        {...comment, content: action.payload.newContent}
+                        :
+                        comment
+                    )
+            }
+        }
+
+        case INCREMENT_COUNTER: {
+            return {
+                ...state,
+                comments:
+                    state.comments.map(comment => comment.id === action.payload ?
+                        {...comment, score: comment.score + 1}
+                        :
+                        comment
+                    )
+            };
+        }
+        case DECREMENT_COUNTER: {
+            return {
+                ...state,
+                comments:
+                    state.comments.map(comment => comment.id === action.payload ?
+                        {...comment, score: comment.score - 1}
+                        :
+                        comment
+                    )
+            };
+        }
+
+        case INCREMENT_COUNTER_REPLY: {
+            return {
+                ...state,
+                comments: state.comments.map(comment => {
+                    if (comment.replies) {
+                        const updatedReplies = comment.replies.map(reply =>
+                            reply.id === action.payload ? {...reply, score: reply.score + 1} : reply
+                        );
+                        return {...comment, replies: updatedReplies};
+                    } else {
+                        return comment;
+                    }
+                })
+            };
+        }
+
+        case DECREMENT_COUNTER_REPLY: {
+            return {
+                ...state,
+                comments: state.comments.map(comment => {
+                    if (comment.replies) {
+                        const updatedReplies = comment.replies.map(reply =>
+                            reply.id === action.payload ? {...reply, score: reply.score - 1} : reply
+                        );
+                        return {...comment, replies: updatedReplies};
+                    } else {
+                        return comment;
+                    }
+                })
+            };
         }
 
         default:

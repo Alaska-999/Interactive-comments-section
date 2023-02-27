@@ -30,9 +30,9 @@ const NewComment: FC = () => {
 
     return (
         <CardContainer>
-            <CommentForm onSubmit={sendPostHandler}>
+            <Form onSubmit={sendPostHandler}>
                 <CommentForm imageUrl={currentUser.image.png} buttonName={'send'}/>
-            </CommentForm>
+            </Form>
         </CardContainer>
     );
 };

@@ -12,14 +12,19 @@ const NewComment: FC = () => {
     const dispatch = useDispatch()
     const sendPostHandler = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault()
-        const newComment = {
-            content: (e.currentTarget.elements[0] as HTMLInputElement).value,
-            createdAt: 'date',
-            id: Math.random(),
-            user: currentUser
+        if((e.currentTarget.elements[0] as HTMLInputElement).value != '') {
+            const newComment = {
+                content: (e.currentTarget.elements[0] as HTMLInputElement).value,
+                createdAt: 'date',
+                id: Math.random(),
+                user: currentUser
+            }
+            dispatch(addNewComment(newComment))
+            e.currentTarget.reset()
+        } else {
+            console.log('empty input')
         }
-        dispatch(addNewComment(newComment))
-        e.currentTarget.reset()
+
     }
 
     return (

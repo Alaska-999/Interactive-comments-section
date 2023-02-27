@@ -19,17 +19,22 @@ const NewReply: FC<NewReplyProps> = ({commentId, setReply, replyTo}) => {
 
 
     const sendReplyHandler = (e: FormEvent<HTMLFormElement>) => {
-        e.preventDefault()
-        const newReply = {
-            content: (e.currentTarget.elements[0] as HTMLInputElement).value,
-            createdAt: 'date',
-            id: Math.random(),
-            user: currentUser,
-            replyingTo: replyTo
+        if((e.currentTarget.elements[0] as HTMLInputElement).value != '') {
+            e.preventDefault()
+            const newReply = {
+                content: (e.currentTarget.elements[0] as HTMLInputElement).value,
+                createdAt: 'date',
+                id: Math.random(),
+                user: currentUser,
+                replyingTo: replyTo
+            }
+            dispatch(addNewReply(newReply, commentId!))
+            e.currentTarget.reset()
+            setReply(false)
+        } else {
+            console.log('empty input')
         }
-        dispatch(addNewReply(newReply, commentId!))
-        e.currentTarget.reset()
-        setReply(false)
+
     }
 
     return (

@@ -1,12 +1,12 @@
 import styled from "styled-components";
 import React, {FC} from 'react';
 
-interface IFormInputProps {
+interface IFormProps {
     imageUrl: string,
     buttonName: string
 }
 
-const FormInput: FC<IFormInputProps> = ({imageUrl, buttonName}) => {
+const CommentForm: FC<IFormProps> = ({imageUrl, buttonName}) => {
     return (
         <>
             <Div>
@@ -72,5 +72,5 @@ const SendBtn = styled.button`
 `
 
 
-export default FormInput;
+export default CommentForm;
 

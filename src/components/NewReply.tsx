@@ -5,7 +5,7 @@ import {useTypedSelector} from "../hooks/useTypedSelector";
 import styled from "styled-components";
 import {useDispatch} from "react-redux";
 import {addNewReply} from "../store/reducers/commentsActions";
-import FormInput from "./UI/FormInput";
+import CommentForm from "./UI/CommentForm";
 
 interface NewReplyProps {
     commentId?: number,
@@ -41,7 +41,7 @@ const NewReply: FC<NewReplyProps> = ({commentId, setReply, replyTo}) => {
     return (
         <CardContainer>
             <Form onSubmit={sendReplyHandler}>
-                <FormInput imageUrl={currentUser.image.png} buttonName={'reply'}/>
+                <CommentForm imageUrl={currentUser.image.png} buttonName={'reply'}/>
             </Form>
         </CardContainer>
     );

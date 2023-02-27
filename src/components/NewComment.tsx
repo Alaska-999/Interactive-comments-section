@@ -5,7 +5,7 @@ import {IUser} from "../types/comments";
 import {useTypedSelector} from "../hooks/useTypedSelector";
 import {useDispatch} from "react-redux";
 import {addNewComment} from "../store/reducers/commentsActions";
-import FormInput from "./UI/FormInput";
+import CommentForm from "./UI/CommentForm";
 
 const NewComment: FC = () => {
 
@@ -30,9 +30,9 @@ const NewComment: FC = () => {
 
     return (
         <CardContainer>
-            <Form onSubmit={sendPostHandler}>
-                <FormInput imageUrl={currentUser.image.png} buttonName={'send'}/>
-            </Form>
+            <CommentForm onSubmit={sendPostHandler}>
+                <CommentForm imageUrl={currentUser.image.png} buttonName={'send'}/>
+            </CommentForm>
         </CardContainer>
     );
 };

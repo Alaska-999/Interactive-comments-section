@@ -6,12 +6,12 @@ export const ADD_NEW_COMMENT = 'ADD_NEW_COMMENT'
 export const DELETE_COMMENT = 'DELETE_COMMENT'
 export const DELETE_REPLY = 'DELETE_REPLY'
 export const UPDATE_COMMENT = 'UPDATE_COMMENT'
+export const UPDATE_REPLY = 'UPDATE_REPLY'
 export const INCREMENT_COUNTER = 'INCREMENT_COUNTER'
 export const DECREMENT_COUNTER = 'DECREMENT_COUNTER'
 export const INCREMENT_COUNTER_REPLY = 'INCREMENT_COUNTER_REPLY'
 export const DECREMENT_COUNTER_REPLY = 'DECREMENT_COUNTER_REPLY'
 export const ADD_NEW_REPLY = 'ADD_NEW_REPLY'
-
 
 
 export const addComments = (comments: ICommentsItem[]) => ({
@@ -29,6 +29,12 @@ export const addNewComment = (comment: INewComment) => ({
 export const updateComment = (id: number, newContent: string) => {
     return ({
         type: UPDATE_COMMENT, payload: {id, newContent}
+    })
+}
+
+export const updateReply = (replyId: number, commentId: number, newContent: string) => {
+    return ({
+        type: UPDATE_COMMENT, payload: {replyId, commentId, newContent}
     })
 }
 
@@ -63,10 +69,7 @@ export const decrementRateReply = (id: number) => ({
 export const addNewReply = (reply: INewReply, id: number) => ({
     type: ADD_NEW_REPLY, payload: {reply, id}
 })
-//
-// export const addNewReplyToReply = (reply: INewReply, commentId: number, replyId: number) => ({
-//     type: ADD_NEW_REPLY_TO_REPLY, payload: {reply, commentId, replyId}
-// })
+
 
 
 

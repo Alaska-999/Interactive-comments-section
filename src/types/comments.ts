@@ -4,7 +4,7 @@ import {
     ADD_NEW_COMMENT, ADD_NEW_REPLY, DECREMENT_COUNTER, DECREMENT_COUNTER_REPLY,
     DELETE_COMMENT, DELETE_REPLY,
     GET_CURRENT_USER, INCREMENT_COUNTER, INCREMENT_COUNTER_REPLY,
-    UPDATE_COMMENT
+    UPDATE_COMMENT, UPDATE_REPLY
 } from "../store/reducers/commentsActions";
 
 export interface IUser {
@@ -38,6 +38,7 @@ export interface INewComment {
     id: number,
     user: IUser
 }
+
 export interface INewReply {
     id: number
     content: string,
@@ -91,6 +92,15 @@ interface IUpdateComment {
     };
 }
 
+interface IUpdateReply {
+    type: typeof UPDATE_REPLY;
+    payload: {
+        replyId: number,
+        commentId: number,
+        newContent: string
+    };
+}
+
 interface IIncrementCounter {
     type: typeof INCREMENT_COUNTER;
     payload: number
@@ -114,25 +124,17 @@ interface IDecrementCounterReply {
 interface IAddNewReply {
     type: typeof ADD_NEW_REPLY;
     payload: {
-        reply : INewReply,
+        reply: INewReply,
         id: number
     }
 }
-
-// interface IAddNewReplyToReply {
-//     type: typeof ADD_NEW_REPLY_TO_REPLY;
-//     payload: {
-//         reply : INewReply,
-//         commentId: number
-//         replyId: number
-//     }
-// }
 
 export type CommentsActionTypes = IAddCommentsAction
     | IGetCurrentUserAction
     | IAddNewCommentAction
     | IDeleteComment
     | IUpdateComment
+    | IUpdateReply
     | IIncrementCounter
     | IDecrementCounter
     | IIncrementCounterReply

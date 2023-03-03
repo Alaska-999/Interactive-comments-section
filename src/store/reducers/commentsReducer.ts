@@ -3,9 +3,9 @@ import {
     ADD_NEW_COMMENT, ADD_NEW_REPLY, DECREMENT_COUNTER, DECREMENT_COUNTER_REPLY,
     DELETE_COMMENT, DELETE_REPLY,
     GET_CURRENT_USER, INCREMENT_COUNTER, INCREMENT_COUNTER_REPLY,
-    UPDATE_COMMENT
+    UPDATE_COMMENT, UPDATE_REPLY
 } from "./commentsActions";
-import {CommentsActionTypes, CommentsState, IUser,} from "../../types/comments";
+import {CommentsActionTypes, CommentsState} from "../../types/comments";
 
 
 const initialState: CommentsState = {
@@ -25,9 +25,11 @@ export const commentsReducer = (state = initialState, action: CommentsActionType
         case ADD_COMMENTS: {
             return {...state, comments: action.payload}
         }
+
         case GET_CURRENT_USER: {
             return {...state, currentUser: action.payload}
         }
+
         case ADD_NEW_COMMENT: {
             return {
                 ...state, comments: [...state.comments,
@@ -77,6 +79,7 @@ export const commentsReducer = (state = initialState, action: CommentsActionType
                     state.comments.filter((comment) => comment.id !== action.payload)
             }
         }
+
         case DELETE_REPLY: {
             return {
                 ...state, comments:
@@ -102,6 +105,24 @@ export const commentsReducer = (state = initialState, action: CommentsActionType
                     )
             }
         }
+        case UPDATE_REPLY: {
+            return {
+                ...state,
+                comments: state.comments.map(comment => {
+                    if (comment.replies) {
+                        const updatedReplies = comment.replies.map(reply =>
+                            reply.id === action.payload.replyId ?
+                                {...reply, content: action.payload.newContent}
+                                :
+                                reply
+                        );
+                        return {...comment, replies: updatedReplies};
+                    } else {
+                        return comment;
+                    }
+                })
+            }
+        }
 
         case INCREMENT_COUNTER: {
             return {
@@ -114,6 +135,7 @@ export const commentsReducer = (state = initialState, action: CommentsActionType
                     )
             };
         }
+
         case DECREMENT_COUNTER: {
             return {
                 ...state,
